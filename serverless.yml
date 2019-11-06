@@ -1,0 +1,67 @@
+service: dynamo-sls-sample
+
+provider:
+  name: aws
+  runtime: nodejs10.x
+  region: ap-northeast-1
+  environment:
+    TODOS_TABLE: dynamo-sls-sample-todos
+
+custom:
+  dynamodb:
+    stages:
+      - dev
+      - test
+    start:
+      host: localhost
+      port: 8000
+      migrate: true
+      noStart: true
+  dynamodbStream:
+    host: localhost
+    port: 8000
+    pollForever: boolean
+    streams:
+      - table: dynamo-sls-sample-todos
+        functions:
+          - showStrem
+
+plugins:
+  - serverless-offline
+  - serverless-plugin-offline-dynamodb-stream
+  - serverless-dynamodb-local
+  # - serverless-webpack
+
+functions:
+  createTodo:
+    handler: src/todos/handler.createTodo
+    events:
+      - http:
+          method: POST
+          path: /todos
+  getTodos:
+    handler: src/todos/handler.getTodos
+    events:
+      - http:
+          method: GET
+          path: todos
+  showStrem:
+    handler: src/compute/handler.showStream
+
+resources:
+  Resources:
+    TodoDynamoDBTable:
+      Type: "AWS::DynamoDB::Table"
+      Properties:
+        TableName: dynamo-sls-sample-todos
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+        StreamSpecification:
+          StreamViewType: NEW_IMAGE

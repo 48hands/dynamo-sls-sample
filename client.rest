@@ -1,8 +1,0 @@
-### Get Todos
-GET http://localhost:3000/todos
-
-### Create Todo
-POST http://localhost:3000/todos
-Content-Type: application/json
-
-{"title": "sample", "published": false

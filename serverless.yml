@@ -24,13 +24,12 @@ custom:
     streams:
       - table: dynamo-sls-sample-todos
         functions:
-          - showStrem
+          - showDynamoDbStrem
 
 plugins:
   - serverless-offline
   - serverless-plugin-offline-dynamodb-stream
   - serverless-dynamodb-local
-  # - serverless-webpack
 
 functions:
   createTodo:
@@ -44,9 +43,28 @@ functions:
     events:
       - http:
           method: GET
-          path: todos
-  showStrem:
-    handler: src/compute/handler.showStream
+          path: /todos
+  updateTodo:
+    handler: src/todos/handler.updateTodo
+    events:
+      - http:
+          method: PUT
+          path: /todos/{id}
+          request:
+            parmaeters:
+              id: true
+  deleteTodo:
+    handler: src/todos/handler.deleteTodo
+    events:
+      - http:
+          method: DELETE
+          path: /todos/{id}
+          request:
+            parmaeters:
+              id: true
+
+  showDynamoDbStrem:
+    handler: src/streams/handler.showDynamoDbStream
 
 resources:
   Resources:

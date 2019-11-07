@@ -1,0 +1,23 @@
+### Get Todos
+GET http://localhost:3000/todos
+
+### Create Todo
+POST http://localhost:3000/todos
+Content-Type: application/json
+
+{
+  "title": "sample", 
+  "published": false
+}
+
+### Update Todo
+PUT http://localhost:3000/todos/7492d250-00f8-11ea-aae3-5b279a7ebf15
+Content-Type: application/json
+
+{
+  "title": "updated sample", 
+  "published": true
+}
+
+### Delete Todo
+DELETE http://localhost:3000/todos/7492d250-00f8-11ea-aae3-5b279a7ebf15
